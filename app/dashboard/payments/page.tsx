@@ -23,7 +23,7 @@ export default async function PaymentsPage() {
     if (!salon) redirect("/onboarding");
 
     const paidAppointments = salon.appointments || [];
-    const totalRevenue = paidAppointments.reduce((sum, app) => sum + (app.paidAmount || 0), 0);
+    const totalRevenue = paidAppointments.reduce((sum: number, app: any) => sum + (app.paidAmount || 0), 0);
 
     return (
         <div className="p-10 font-sans w-full max-w-7xl mx-auto">
@@ -108,7 +108,7 @@ export default async function PaymentsPage() {
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {paidAppointments.length > 0 ? (
-                                paidAppointments.map((app) => {
+                                paidAppointments.map((app: any) => {
                                     const price = app.service?.price || 0;
                                     let deposit = 0;
                                     if (salon.depositType === "fixed") {

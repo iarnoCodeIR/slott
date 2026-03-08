@@ -150,7 +150,7 @@ export default function SlottLandingPage() {
       <section id="features" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-20">
-            <h2 className="text-4xl md:text-6xl font-normal tracking-tight mb-6">L'excellence au <br /><span className="text-emerald-500 italic">quotidien.</span></h2>
+            <h2 className="text-4xl md:text-6xl font-normal tracking-tight mb-6">L&apos;excellence au <br /><span className="text-emerald-500 italic">quotidien.</span></h2>
             <p className="text-xl text-slate-400 max-w-xl">Oubliez les grilles classiques et les interfaces génériques. SLOTT est une mécanique de précision pour votre salon.</p>
           </div>
 

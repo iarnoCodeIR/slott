@@ -76,7 +76,7 @@ export default function AppointmentCard({ app, topOffset }: { app: any, topOffse
                             <h3 className="text-3xl font-bold text-white mb-2">{app.client}</h3>
                             {app.paymentStatus === "PENDING" ? (
                                 <div className="inline-block bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest animate-pulse">
-                                    En attente d'acompte
+                                    En attente d&apos;acompte
                                 </div>
                             ) : app.paymentStatus === "FAILED" ? (
                                 <div className="inline-block bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">

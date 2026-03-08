@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { createBooking } from "@/app/book/[salon]/actions";
 import { useRouter } from "next/navigation";
 
-export default function AddAppointmentModal({ staffList, servicesList, targetDate }: { staffList: any[], servicesList: any[], targetDate: string }) {
+export default function AddAppointmentModal({ staffList, servicesList, targetDate, salonId }: { staffList: any[], servicesList: any[], targetDate: string, salonId: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -36,9 +36,10 @@ export default function AddAppointmentModal({ staffList, servicesList, targetDat
                 clientName: formData.clientName,
                 clientPhone: formData.clientPhone,
                 clientEmail: formData.clientEmail,
-                serviceId: formData.serviceId,
+                serviceIds: [formData.serviceId],
                 staffId: formData.staffId,
-                slotTime
+                slotTime,
+                salonId
             });
 
             if (res.success) {

@@ -105,6 +105,7 @@ export default async function DashboardAgenda(props: { searchParams: Promise<{ d
                         staffList={staffList.map(s => ({ id: s.id, name: s.name }))}
                         servicesList={servicesList}
                         targetDate={formatDt(targetDate)}
+                        salonId={salon.id}
                     />
                 </div>
             </header>

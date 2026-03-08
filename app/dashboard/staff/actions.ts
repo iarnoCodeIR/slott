@@ -41,8 +41,8 @@ export async function updateStaff(id: string, data: { name: string, role: string
         revalidatePath("/dashboard/staff");
         revalidatePath("/book/[salon]", "page");
         return { success: true, staff };
-    } catch (e) {
-        return { success: false, error: "Erreur lors de la mise à jour." };
+    } catch (e: any) {
+        return { success: false, error: e.message || "Erreur lors de la mise à jour." };
     }
 }
 
@@ -55,8 +55,8 @@ export async function updateStaffHours(id: string, workingHours: any) {
         revalidatePath("/dashboard/staff");
         revalidatePath("/book/[salon]", "page");
         return { success: true, staff };
-    } catch (e) {
-        return { success: false, error: "Erreur lors de la mise à jour des horaires." };
+    } catch (e: any) {
+        return { success: false, error: e.message || "Erreur lors de la mise à jour des horaires." };
     }
 }
 
@@ -66,7 +66,7 @@ export async function deleteStaff(id: string) {
         revalidatePath("/dashboard/staff");
         revalidatePath("/book/[salon]", "page");
         return { success: true };
-    } catch (e) {
-        return { success: false, error: "Impossible de supprimer cet employé. Il a probablement des rendez-vous assignés." };
+    } catch (e: any) {
+        return { success: false, error: e.message || "Impossible de supprimer cet employé. Il a probablement des rendez-vous assignés." };
     }
 }

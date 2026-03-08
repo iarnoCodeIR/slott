@@ -37,8 +37,8 @@ export async function getAvailableSlots(staffId: string, serviceIds: string[], d
         if (!staff || servicesList.length === 0) return [];
 
         // Total duration = sum of all selected services + their buffers
-        const durationMin = servicesList.reduce((sum, s) => sum + s.durationMin, 0);
-        const bufferMin = servicesList.reduce((sum, s) => sum + (s.bufferTimeMin || 0), 0);
+        const durationMin = servicesList.reduce((sum: number, s: any) => sum + s.durationMin, 0);
+        const bufferMin = servicesList.reduce((sum: number, s: any) => sum + (s.bufferTimeMin || 0), 0);
 
         // Date parsée en locale depuis le YYYY-MM-DD
         const [year, month, day] = dateStr.split("-").map(Number);
@@ -215,7 +215,7 @@ export async function createBooking(data: {
 
         // Ordered services to calculate accurate end time
         const ordered = data.serviceIds.map(id => services.find(s => s.id === id)!).filter(Boolean);
-        const totalPrice = services.reduce((sum, s) => sum + s.price, 0);
+        const totalPrice = services.reduce((sum: number, s: any) => sum + s.price, 0);
 
         // Acompte / Anti-lapin calculation
         let depositAmount = 0;

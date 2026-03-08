@@ -315,8 +315,8 @@ function BookingFlowContent({ salon, services, staffList }: Props) {
 
     const [selectedServices, setSelectedServices] = useState<Props["services"]>([]);
     const selectedService = selectedServices[0] || null; // alias for backward compat
-    const totalDuration = selectedServices.reduce((sum, s) => sum + s.durationMin, 0);
-    const totalPrice = selectedServices.reduce((sum, s) => sum + s.price, 0);
+    const totalDuration = selectedServices.reduce((sum: number, s: any) => sum + s.durationMin, 0);
+    const totalPrice = selectedServices.reduce((sum: number, s: any) => sum + s.price, 0);
     const [selectedStaff, setSelectedStaff] = useState<Props["staffList"][0] | null>(null);
     const [selectedDate, setSelectedDate] = useState<string>(() => {
         const d = new Date();
@@ -547,7 +547,7 @@ function BookingFlowContent({ salon, services, staffList }: Props) {
                                     onClick={() => setActiveTab("enseigne")}
                                     className={`w-1/2 py-4 text-center font-medium transition-all ${activeTab === "enseigne" ? `text-white border-b-2 ${t.border}` : "text-slate-500 hover:text-slate-300 border-b-2 border-transparent"}`}
                                 >
-                                    L'Enseigne
+                                    L&apos;Enseigne
                                     {activeTab === "enseigne" && <motion.div layoutId="tab-indicator" className={`absolute bottom-0 left-0 right-0 h-0.5 ${t.bg}`} />}
                                 </button>
                             </div>
@@ -563,7 +563,7 @@ function BookingFlowContent({ salon, services, staffList }: Props) {
                                         className="space-y-8"
                                     >
                                         {Object.entries(
-                                            services.reduce((acc, curr) => {
+                                            services.reduce((acc: Record<string, typeof services>, curr: any) => {
                                                 const cat = curr.category || "Prestations";
                                                 if (!acc[cat]) acc[cat] = [];
                                                 acc[cat].push(curr);
@@ -683,7 +683,7 @@ function BookingFlowContent({ salon, services, staffList }: Props) {
                                             <div>
                                                 <h3 className={`text-2xl font-bold mb-4 ${textApp}`}>À propos</h3>
                                                 <p className={`${textMuted} leading-relaxed text-[15px] max-w-2xl text-justify`}>
-                                                    {salon.description || "Aucune description de l'enseigne n'a été spécifiée."}
+                                                    {salon.description || "Aucune description de l&apos;enseigne n&apos;a été spécifiée."}
                                                 </p>
                                                 <div className={`mt-6 w-12 h-1 rounded flex-shrink-0 ${t.bg}`}></div>
                                             </div>
@@ -929,7 +929,7 @@ function BookingFlowContent({ salon, services, staffList }: Props) {
                                     ) : (
                                         <span className="group-hover:scale-105 transition-transform flex items-center gap-2">
                                             {salon.depositType && salon.depositType !== "none" ? (
-                                                <>Payer l'acompte <ChevronRight className="w-4 h-4" /></>
+                                                <>Payer l&apos;acompte <ChevronRight className="w-4 h-4" /></>
                                             ) : (
                                                 "Confirmer mon Slot"
                                             )}
