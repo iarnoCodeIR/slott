@@ -1,0 +1,113 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Salon {
+  id           String        @id @default(uuid())
+  userId       String?       @unique // Supabase auth user ID
+  name         String
+  slug         String        @unique
+  phone        String?
+  address      String?
+  description  String?
+  images       String[]      @default([])
+  advanceBookingDays Int       @default(0) // 0 = le jour même, 1 = 24h avant, 7 = 1 semaine avant, etc.
+  theme        String        @default("emerald")
+  logo         String?
+  font         String        @default("inter") // inter, playfair, nunito, teko, mono
+  borderRadius String        @default("smooth") // sharp, smooth, rounded
+  mode         String        @default("dark") // dark, light, etc
+  heroImage    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  // Anti-lapin (Acompte) & Stripe Connect
+  depositType  String        @default("none") // none, fixed, percentage
+  depositValue Float         @default(0)
+  stripeAccountId String?    // Linked Stripe Connect account ID
+  stripeConnected Boolean    @default(false) // Whether onboarding is complete
+  
+  staff        Staff[]
+  services     Service[]
+  appointments Appointment[]
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  userId               String?  @unique // Supabase auth user ID
+  email                String   @unique
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?  @unique
+  status               String   @default("inactive") // active, trialing, past_due, canceled, inactive
+  planId               String?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+
+model Staff {
+  id           String        @id @default(uuid())
+  salonId      String
+  name         String
+  role         String?
+  workingHours Json?         @default("{\"1\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"2\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"3\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"4\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"5\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"6\": {\"active\": true, \"start\": \"09:00\", \"end\": \"18:00\"}, \"0\": {\"active\": false, \"start\": \"09:00\", \"end\": \"18:00\"}}")
+  
+  salon        Salon         @relation(fields: [salonId], references: [id])
+  appointments Appointment[]
+  
+  @@index([salonId])
+}
+
+model Service {
+  id           String        @id @default(uuid())
+  salonId      String
+  name         String
+  description  String?
+  category     String        @default("Prestations") // Ex: "Coupe", "Barbe", "Forfaits"
+  durationMin  Int           // Ex: 30
+  bufferTimeMin Int          @default(0) // Temps de nettoyage/battement (Ex: 10)
+  price        Float         // Ex: 25.00
+  
+  salon        Salon         @relation(fields: [salonId], references: [id])
+  appointments Appointment[]
+
+  @@index([salonId])
+}
+
+model Appointment {
+  id            String   @id @default(uuid())
+  staffId       String
+  serviceId     String
+  clientName    String
+  clientPhone   String
+  clientEmail   String
+  slotTime      DateTime // Stocké en UTC (Date + Heure précise du créneau)
+  status        String   @default("CONFIRMED") // CONFIRMED, CANCELLED
+  isRead        Boolean  @default(false)       // Pour les notifications
+  historyVisible Boolean @default(true)        // Pour purger l'historique visuellement
+  createdAt     DateTime @default(now())
+  
+  // Payment tracking
+  paymentStatus String   @default("NONE") // NONE, PENDING, PAID, FAILED
+  isPaid        Boolean  @default(false)
+  paidAmount    Float?   // Actual amount paid as a deposit
+  paymentId     String?  // Stripe session or payment intent ID
+  
+  staff         Staff    @relation(fields: [staffId], references: [id])
+  service       Service  @relation(fields: [serviceId], references: [id])
+  salon         Salon?   @relation(fields: [salonId], references: [id])
+  salonId       String?
+
+  // 🔥 Le cœur du moteur anticollision : 
+  // Impossible d'avoir 2 rendez-vous avec le même staff au même moment.
+  @@unique([staffId, slotTime], name: "staff_slot_unique")
+  @@index([slotTime])
+  @@index([salonId])
+}
